@@ -9,23 +9,12 @@ const app = express();
 inquirer
   .prompt([
     {
-      type: 'input',
-      message: 'What is your user name?',
-      name: 'username',
-    },
-    {
-      type: 'password',
-      message: 'What is your password?',
-      name: 'password',
-    },
-    {
-      type: 'password',
-      message: 'Re-enter password to confirm:',
-      name: 'confirm',
+      type: 'list',
+      message: 'What would you like to do?',
+      name: 'tasks',
+      choices: ['View all employees', 'Add employee', 'Update employee role', 'View all roles', 'Add role', 'View all departments', 'Add department', 'Quit'],
     },
   ])
   .then((response) =>
     response.confirm === response.password
-      ? console.log('Success!')
-      : console.log('You forgot your password already?!')
   );
