@@ -2,22 +2,23 @@ const express = require('express');
 const inquirer = require('inquirer');
 const cTable = require('console.table');
 const mysql = require('mysql2');
+require('dotenv').config();
 
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-// app.use(express.urlencoded({ extended: false }));
-// app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
-// const db = mysql.createConnection(
-//   {
-//     host: 'localhost',
-//     user: 'root',
-//     password: process.env.DB_PASSWORD || '',
-//     database: 'employee_db'
-//   },
-//   console.log(`Connected to database.`)
-// );
+const db = mysql.createConnection(
+  {
+    host: 'localhost',
+    user: 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: 'employee_db'
+  },
+  console.log(`Connected to database.`)
+);
 
 inquirer
   .prompt([
@@ -31,3 +32,7 @@ inquirer
   .then((answers =>
     console.info('Answer:', answers.tasks)
   ));
+
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
