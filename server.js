@@ -9,7 +9,6 @@ const app = express();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(bodyParser.json())
 
 const db = mysql.createConnection(
   {
@@ -79,12 +78,20 @@ const init = () => {
             VALUES (?);`
             const newEmployeeData = [];
             newEmployeeData.push([answers.employee_id, answers.first_name, answers.last_name, answers.role_id, answers.manager_id]);
-            console.log(newEmployeeData);
+
             db.query(newEmployeeSql, newEmployeeData, (err, result) => {
               if (err) {
                 console.log(err);
               } else {
-                console.log(result);
+                console.table([
+                  {
+                    employee_id: answers.employee_id,
+                    first_name: answers.first_name, 
+                    last_name: answers.last_name, 
+                    role_id: answers.role_id, 
+                    manager_id: answers.manager_id
+                  }
+                ]);
               }
               })
           })
