@@ -83,7 +83,14 @@ const init = () => {
               if (err) {
                 console.log(err);
               } else {
-                console.table(result);
+                db.query('SELECT * FROM employees', function (err, results) {
+                  if(err) {
+                    console.log(err) 
+                  } else {
+                    console.table(results)
+                    init();
+                  }
+                }); 
               }
             })
           });
@@ -102,7 +109,7 @@ const init = () => {
             },
           ]).then((answers) => {
             const updateRoleSql = `UPDATE employees SET role_id = ? WHERE employee_id = ?;`
-            const updateRoleData = [answers.employee_id, answers.role_id];
+            const updateRoleData = [answers.role_id, answers.employee_id];
 
             db.query(updateRoleSql, updateRoleData, (err, result) => {
               if (err) {
@@ -114,6 +121,7 @@ const init = () => {
                     console.log(err);
                   } else {
                     console.table(result);
+                    init();
                   }
                 })
               }
@@ -162,7 +170,15 @@ const init = () => {
               if (err) {
                 console.log(err);
               } else {
-                console.table(result);
+                const getNewRoleData = 'SELECT * FROM roles WHERE role_id = ?'
+                db.query(getNewRoleData, answers.role_id, (err, result) => {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    console.table(result);
+                    init();
+              }
+            })
               }
             })
           });
@@ -199,10 +215,17 @@ const init = () => {
               if (err) {
                 console.log(err);
               } else {
-                console.table(result);
+                const getNewDepartmentData = 'SELECT * FROM departments WHERE department_id = ?'
+                db.query(getNewDepartmentData, answers.department_id, (err, result) => {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    console.table(result);
+                    init();
               }
             })
-          });
+          }})
+        });
         break;
         case 'Quit':
         break;
