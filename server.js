@@ -83,21 +83,42 @@ const init = () => {
               if (err) {
                 console.log(err);
               } else {
-                console.table([
-                  {
-                    employee_id: answers.employee_id,
-                    first_name: answers.first_name, 
-                    last_name: answers.last_name, 
-                    role_id: answers.role_id, 
-                    manager_id: answers.manager_id
-                  }
-                ]);
+                console.table(result);
               }
-              })
-          })
+            })
+          });
         break;
         case 'Update employee role':
-          
+          inquirer.prompt([
+            {
+              type: 'input',
+              name: 'employee_id',
+              message: 'What is the employees ID?'
+            },
+            {
+              type: 'input',
+              name: 'role_id',
+              message: 'What is the employees new role ID?'
+            },
+          ]).then((answers) => {
+            const updateRoleSql = `UPDATE employees SET role_id = ? WHERE employee_id = ?;`
+            const updateRoleData = [answers.employee_id, answers.role_id];
+
+            db.query(updateRoleSql, updateRoleData, (err, result) => {
+              if (err) {
+                console.log(err);
+              } else {
+                const getEmployeeDataSQl = 'SELECT * FROM employees WHERE employee_id = ?'
+                db.query(getEmployeeDataSQl, answers.employee_id, (err, result) => {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    console.table(result);
+                  }
+                })
+              }
+            })
+          });
         break;
         case 'View all roles':
           db.query('SELECT * FROM roles', function (err, results) {
@@ -110,7 +131,41 @@ const init = () => {
           });  
         break;
         case 'Add role':
-          
+          inquirer.prompt([
+            {
+              type:'input',
+              name: 'role_id',
+              message: 'What is the role ID?',
+            },
+            {
+              type:'input',
+              name: 'role_title',
+              message: 'What is the role title?',
+            },
+            {
+              type:'input',
+              name: 'salary',
+              message: 'What is salary for this role?',
+            },
+            {
+              type:'input',
+              name: 'department_id',
+              message: 'What is the department ID that this role belongs to?',
+            },
+          ]).then((answers) => {
+            const newRoleSql = `INSERT INTO roles (role_id, role_title, salary, department_id) 
+            VALUES (?);`
+            const newRoleData = [];
+            newRoleData.push([answers.role_id, answers.role_title, answers.salary, answers.department_id]);
+
+            db.query(newRoleSql, newRoleData, (err, result) => {
+              if (err) {
+                console.log(err);
+              } else {
+                console.table(result);
+              }
+            })
+          });
         break;
         case 'View all departments':
           db.query('SELECT * FROM departments', function (err, results) {
@@ -123,7 +178,31 @@ const init = () => {
           });  
         break;
         case 'Add department':
-          
+          inquirer.prompt([
+            {
+              type:'input',
+              name: 'department_id',
+              message: 'What is the department ID?',
+            },
+            {
+              type:'input',
+              name: 'department_name',
+              message: 'What is the department name?',
+            },
+          ]).then((answers) => {
+            const newDepartmentSql = `INSERT INTO departments (department_id, department_name) 
+            VALUES (?);`
+            const newDepartmentData = [];
+            newDepartmentData.push([answers.department_id, answers.department_name]);
+
+            db.query(newDepartmentSql, newDepartmentData, (err, result) => {
+              if (err) {
+                console.log(err);
+              } else {
+                console.table(result);
+              }
+            })
+          });
         break;
         case 'Quit':
         break;
