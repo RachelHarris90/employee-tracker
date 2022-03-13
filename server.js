@@ -9,6 +9,7 @@ const app = express();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(bodyParser.json())
 
 const db = mysql.createConnection(
   {
@@ -74,10 +75,11 @@ const init = () => {
               message: 'What is the employees manager ID?',
             },
           ]).then((answers) => {
-            console.log(JSON.stringify(answers));
             const newEmployeeSql = `INSERT INTO employees (employee_id, first_name, last_name, role_id, manager_id) 
             VALUES (?);`
-            const newEmployeeData = {answers};
+            const newEmployeeData = [];
+            newEmployeeData.push([answers.employee_id, answers.first_name, answers.last_name, answers.role_id, answers.manager_id]);
+            console.log(newEmployeeData);
             db.query(newEmployeeSql, newEmployeeData, (err, result) => {
               if (err) {
                 console.log(err);
